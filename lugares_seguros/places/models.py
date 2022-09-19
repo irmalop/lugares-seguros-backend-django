@@ -14,4 +14,4 @@ class  Place(models.Model):
         db_table = 'places'
     
     def __str__(self):
-        return self.name
+        return self.address_state
