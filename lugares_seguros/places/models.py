@@ -1,4 +1,10 @@
+from email.policy import default
 from django.db import models
+
+
+def upload_load(instance, filename):
+    return f'photos_place/{instance.name}/{filename}'
+
 
 # Create your models here.
 class  Place(models.Model):
@@ -9,6 +15,7 @@ class  Place(models.Model):
     address_colonia = models.CharField(max_length=32)
     address_street = models.CharField(max_length=32)
     address_zipcode = models.CharField(max_length=32)
+    image = models.ImageField(upload_to = upload_load, default = 'default.jpg', null = False)
 
     class Meta:
         db_table = 'places'

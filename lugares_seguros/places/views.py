@@ -2,11 +2,14 @@ from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from places.models import Place
 from places.serializers import PlaceSerializer
 
 
 class PlaceView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
     def get(self, request):
         places = Place.objects.all()
         print(places)
@@ -14,6 +17,12 @@ class PlaceView(APIView):
         return Response(serializer.data, status = status.HTTP_200_OK)
 
     def post(self, request):
+        print(request.data)
+        try:
+            file = request.data['image']
+            request.data['image'] = file
+        except KeyError:
+            file = None
         serializer = PlaceSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         serializer.save()
