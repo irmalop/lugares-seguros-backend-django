@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from places.models import Place
-from places.serializers import PlaceSerializer
+from places.serializers import PlaceSerializer, PlaceListCommentSerializer
 
 
 class PlaceView(APIView):
@@ -30,12 +30,21 @@ class PlaceView(APIView):
 
 
 class PlaceSingleView(APIView):
+    
+    def get(self, request, id):
+        place = Place.objects.filter(id=id).first()
+        if place is None:
+            return Response({'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer=PlaceListCommentSerializer(place)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def put(self, request, id):
         place = Place.objects.get(id = id)
         serializer = PlaceSerializer(place, data = request.data, partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return Response(serializer.data, status = status.HTTP_200_OK)
+
     def delete(self, request, id):
         place = Place.objects.get(id = id)
         place.delete()

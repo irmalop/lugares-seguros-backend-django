@@ -21,3 +21,13 @@ class CommentSerializer(serializers.ModelSerializer):
             'comment': instance.comment,
             'created': instance.created
         }
+
+class CommentPlaceListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'comment',
+            'created',
+        )
