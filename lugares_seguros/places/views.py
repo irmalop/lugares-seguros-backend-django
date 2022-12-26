@@ -40,6 +40,8 @@ class PlaceSingleView(APIView):
 
     def put(self, request, id):
         place = Place.objects.get(id = id)
+        if place is None:
+            return Response({'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = PlaceSerializer(place, data = request.data, partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()
